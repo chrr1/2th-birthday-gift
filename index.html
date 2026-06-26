@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
-<title>Selamat Ulang Tahun, Norin! 🎉</title>
+<title>Norin Birthday</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,600&display=swap" rel="stylesheet">
@@ -58,6 +58,7 @@ canvas#confetti-canvas{position:fixed;inset:0;width:100vw;height:100vh;z-index:9
   box-shadow:var(--shadow),0 0 0 8px rgba(255,77,141,.07);
   max-width:540px;width:100%;padding:40px 36px 36px;text-align:center;z-index:2;
   backdrop-filter:blur(14px);
+  transform-style:preserve-3d;transition:transform .12s ease-out;will-change:transform;
 }
 .card::before,.card::after{content:'';position:absolute;width:48px;height:48px;border-radius:50%;opacity:.1;pointer-events:none;}
 .card::before{background:var(--yellow);top:-14px;left:-14px;}
@@ -70,6 +71,29 @@ canvas#confetti-canvas{position:fixed;inset:0;width:100vw;height:100vh;z-index:9
 }
 h1,h2,h3{margin:0 0 8px;font-weight:800;line-height:1.1;}
 p{margin:0 0 6px;font-weight:400;line-height:1.55;color:#4a3558;}
+
+/* ── CARD POP-IN ON SCENE ENTER ── */
+@keyframes cardPopIn{
+  0%{transform:scale(.86) rotate(-2.5deg);}
+  50%{transform:scale(1.035) rotate(1.4deg);}
+  75%{transform:scale(.985) rotate(-.6deg);}
+  100%{transform:scale(1) rotate(0);}
+}
+.card.card-pop{animation:cardPopIn .65s cubic-bezier(.34,1.56,.64,1);}
+
+/* ── INTERACTIVE LETTERS (headings) ── */
+.letters-wrap{display:inline-block;}
+.letter-pop{
+  display:inline-block;animation:letterIn .45s cubic-bezier(.34,1.56,.64,1) both;
+  transition:transform .25s cubic-bezier(.34,1.56,.64,1),color .25s;
+  cursor:default;
+}
+.letter-pop:hover{transform:translateY(-8px) scale(1.28) rotate(-7deg);color:var(--pink);}
+@keyframes letterIn{from{opacity:0;transform:translateY(16px) scale(.4) rotate(8deg);}to{opacity:1;transform:translateY(0) scale(1) rotate(0);}}
+
+/* small settle-bounce after typewriter finishes typing */
+@keyframes bounceOnce{0%{transform:scale(1);}30%{transform:scale(1.07);}60%{transform:scale(.97);}100%{transform:scale(1);}}
+.tw-bounce{animation:bounceOnce .45s ease;}
 
 /* ── TYPEWRITER ── */
 .typewriter{display:inline-block;}
@@ -88,7 +112,7 @@ p{margin:0 0 6px;font-weight:400;line-height:1.55;color:#4a3558;}
   box-shadow:0 6px 0 var(--ink);
   transition:transform .15s,box-shadow .15s,filter .15s;position:relative;overflow:hidden;
 }
-.btn:hover{transform:translateY(-3px);}
+.btn:hover{transform:translateY(-3px) rotate(-1deg);}
 .btn:active{transform:translateY(3px);box-shadow:0 2px 0 var(--ink);}
 .btn.pink{background:var(--pink);color:var(--white);}
 .btn.teal{background:var(--teal);color:var(--white);}
@@ -96,6 +120,14 @@ p{margin:0 0 6px;font-weight:400;line-height:1.55;color:#4a3558;}
 .next-wrap{margin-top:24px;min-height:52px;display:flex;justify-content:center;}
 .next-wrap .btn{opacity:0;pointer-events:none;transform:scale(.88);transition:opacity .5s cubic-bezier(.22,1,.36,1),transform .5s cubic-bezier(.22,1,.36,1);}
 .next-wrap .btn.show{opacity:1;transform:scale(1);pointer-events:auto;}
+
+/* generic click-ripple for any .btn / .arrow-btn */
+.click-ripple{
+  position:absolute;border-radius:50%;background:rgba(255,255,255,.55);
+  width:10px;height:10px;transform:scale(0);pointer-events:none;
+  animation:clickRipple .6s ease-out forwards;
+}
+@keyframes clickRipple{to{transform:scale(20);opacity:0;}}
 
 /* ── DOT NAV ── */
 #dotnav{
@@ -108,6 +140,7 @@ p{margin:0 0 6px;font-weight:400;line-height:1.55;color:#4a3558;}
 #dotnav button{width:10px;height:10px;border-radius:50%;background:#d8cfe0;border:2px solid var(--ink);padding:0;transition:background .3s,transform .2s;}
 #dotnav button.on{background:var(--pink);transform:scale(1.35);}
 #dotnav button.locked{opacity:.3;pointer-events:none;}
+#dotnav button:not(.locked):hover{transform:scale(1.5);}
 
 #mute-btn{
   position:fixed;top:16px;right:16px;z-index:60;width:44px;height:44px;border-radius:50%;
@@ -115,7 +148,7 @@ p{margin:0 0 6px;font-weight:400;line-height:1.55;color:#4a3558;}
   display:flex;align-items:center;justify-content:center;
   box-shadow:0 4px 0 var(--ink);transition:transform .2s;
 }
-#mute-btn:hover{transform:scale(1.1);}
+#mute-btn:hover{transform:scale(1.1) rotate(-8deg);}
 
 /* ── SCENE 0: GIFT ── */
 .gift-wrap{
@@ -123,7 +156,7 @@ p{margin:0 0 6px;font-weight:400;line-height:1.55;color:#4a3558;}
   filter:drop-shadow(0 8px 20px rgba(255,77,141,.22));
   transition:filter .3s,transform .2s;
 }
-.gift-wrap:hover{filter:drop-shadow(0 14px 28px rgba(255,77,141,.38));transform:translateY(-4px);}
+.gift-wrap:hover{filter:drop-shadow(0 14px 28px rgba(255,77,141,.38));transform:translateY(-4px) scale(1.03);}
 .gift-lid{
   position:absolute;top:0;left:-8px;width:226px;height:52px;
   background:linear-gradient(135deg,var(--pink),#ff85b3);
@@ -146,7 +179,8 @@ p{margin:0 0 6px;font-weight:400;line-height:1.55;color:#4a3558;}
 @keyframes pulse{0%,100%{opacity:.4;}50%{opacity:1;}}
 
 /* ── SCENE 1: HERO ── */
-.hero-balloon{position:absolute;width:52px;height:68px;border-radius:50% 50% 50% 50%/55% 55% 45% 45%;border:4px solid var(--ink);animation:float 5s ease-in-out infinite;filter:drop-shadow(0 5px 10px rgba(0,0,0,.14));}
+.hero-balloon{position:absolute;width:52px;height:68px;border-radius:50% 50% 50% 50%/55% 55% 45% 45%;border:4px solid var(--ink);animation:float 5s ease-in-out infinite;filter:drop-shadow(0 5px 10px rgba(0,0,0,.14));cursor:pointer;transition:transform .15s;}
+.hero-balloon:hover{transform:scale(1.15);}
 .hero-balloon::after{content:'';position:absolute;bottom:-24px;left:50%;width:2px;height:26px;background:var(--ink);transform:translateX(-50%);}
 @keyframes float{0%,100%{transform:translateY(0) rotate(-3deg);}50%{transform:translateY(-24px) rotate(4deg);}}
 .hero-name{
@@ -156,6 +190,7 @@ p{margin:0 0 6px;font-weight:400;line-height:1.55;color:#4a3558;}
     letter-spacing: -2px;
     animation: none;
 }
+.hero-name .letter-pop:hover{color:var(--purple);}
 @keyframes shine{0%{background-position:0% 50%;}100%{background-position:300% 50%;}}
 /* wave text for subtitle */
 .wave-text span{display:inline-block;animation:waveLetter .8s ease-in-out infinite alternate;}
@@ -168,8 +203,9 @@ p{margin:0 0 6px;font-weight:400;line-height:1.55;color:#4a3558;}
   padding:22px;border-radius:24px;border:4px solid var(--ink);
   font-size:16px;font-weight:600;line-height:1.6;
   backface-visibility:hidden;transition:transform .55s cubic-bezier(.45,.05,.55,.95),opacity .55s;
-  opacity:0;pointer-events:none;
+  opacity:0;pointer-events:none;cursor:default;
 }
+.wish-card.active:hover{transform:scale(1.02);}
 .wish-card:nth-child(1){background:linear-gradient(135deg,#FFF1D6,#FFE4F0);}
 .wish-card:nth-child(2){background:linear-gradient(135deg,#E9F9F6,#D6F0FF);}
 .wish-card:nth-child(3){background:linear-gradient(135deg,#F1E7FF,#FFE4F0);}
@@ -182,8 +218,8 @@ p{margin:0 0 6px;font-weight:400;line-height:1.55;color:#4a3558;}
 .wish-dots{display:flex;gap:7px;}
 .wish-dots span{width:9px;height:9px;border-radius:50%;background:#e3d6c4;border:2px solid var(--ink);transition:background .3s,transform .3s;}
 .wish-dots span.on{background:var(--teal);transform:scale(1.4);}
-.arrow-btn{width:44px;height:44px;border-radius:50%;border:3px solid var(--ink);background:var(--white);font-size:20px;box-shadow:0 4px 0 var(--ink);transition:transform .15s,box-shadow .15s;}
-.arrow-btn:hover{transform:translateY(-2px);}
+.arrow-btn{position:relative;overflow:hidden;width:44px;height:44px;border-radius:50%;border:3px solid var(--ink);background:var(--white);font-size:20px;box-shadow:0 4px 0 var(--ink);transition:transform .15s,box-shadow .15s;}
+.arrow-btn:hover{transform:translateY(-2px) scale(1.08);}
 .arrow-btn:active{transform:translateY(2px);box-shadow:0 1px 0 var(--ink);}
 
 /* ── SCENE 3: CAKE ── */
@@ -191,9 +227,9 @@ p{margin:0 0 6px;font-weight:400;line-height:1.55;color:#4a3558;}
 .candle{
   position:absolute;bottom:138px;width:13px;height:40px;
   border:3px solid var(--ink);border-radius:5px;cursor:pointer;
-  transition:filter .3s;z-index:10;
+  transition:filter .3s,transform .15s;z-index:10;
 }
-.candle:hover:not(.out){filter:brightness(1.2);}
+.candle:hover:not(.out){filter:brightness(1.2);transform:scale(1.08);}
 .candle[data-candle="1"]{left:74px; background:linear-gradient(180deg,#FF85B3,var(--pink));}
 .candle[data-candle="2"]{left:132px;bottom:154px; background:linear-gradient(180deg,#9ef7ec,var(--teal));}
 .candle[data-candle="3"]{left:190px; background:linear-gradient(180deg,#c4a4ff,var(--purple));}
@@ -240,6 +276,7 @@ p{margin:0 0 6px;font-weight:400;line-height:1.55;color:#4a3558;}
   cursor:pointer;font-family:'Poppins',sans-serif;font-weight:700;
   user-select:none;-webkit-user-select:none;
 }
+.blow-btn:hover{transform:translateY(-2px);}
 .blow-btn:active,.blow-btn.blowing{transform:translateY(3px);box-shadow:0 2px 0 var(--ink);}
 .blow-btn .blow-ripple{
   position:absolute;border-radius:50%;background:rgba(255,255,255,.35);
@@ -270,7 +307,9 @@ p{margin:0 0 6px;font-weight:400;line-height:1.55;color:#4a3558;}
   background:repeating-conic-gradient(#1b1b22 0deg 10deg,#2c2c34 10deg 20deg);
   border:4px solid var(--ink);display:flex;align-items:center;justify-content:center;
   animation:spinvinyl 3.4s linear infinite;animation-play-state:paused;
+  cursor:pointer;transition:transform .15s;
 }
+.vinyl:hover{transform:scale(1.03);}
 .vinyl.playing{animation-play-state:running;}
 .vinyl-label{width:80px;height:80px;border-radius:50%;background:rgb(109, 109, 109);border:4px solid var(--ink);display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:800;color:var(--white);text-align:center;padding:6px;}
 @keyframes spinvinyl{to{transform:rotate(360deg);}}
@@ -288,8 +327,8 @@ p{margin:0 0 6px;font-weight:400;line-height:1.55;color:#4a3558;}
 
 /* ── SCENE 5: WISH ── */
 .wishinput-row{display:flex;gap:8px;margin-top:14px;}
-.wishinput-row input{flex:1;padding:13px 16px;border-radius:999px;border:3px solid var(--ink);font-size:14px;background:rgba(255,246,233,.8);transition:box-shadow .2s;}
-.wishinput-row input:focus{box-shadow:0 0 0 4px rgba(123,63,228,.18);outline:none;}
+.wishinput-row input{flex:1;padding:13px 16px;border-radius:999px;border:3px solid var(--ink);font-size:14px;background:rgba(255,246,233,.8);transition:box-shadow .2s,transform .2s;}
+.wishinput-row input:focus{box-shadow:0 0 0 4px rgba(123,63,228,.18);outline:none;transform:scale(1.02);}
 .balloon-sky{position:fixed;inset:0;pointer-events:none;z-index:50;overflow:hidden;}
 .balloon-float{
   position:absolute;bottom:-90px;padding:10px 16px;border-radius:20px 20px 20px 6px;
@@ -304,9 +343,10 @@ p{margin:0 0 6px;font-weight:400;line-height:1.55;color:#4a3558;}
 @keyframes popBounce{from{transform:scale(0) rotate(-12deg);}to{transform:scale(1) rotate(0);}}
 .finale-title{
   font-size:clamp(28px,6.5vw,52px);font-weight:900;line-height:1.1;
-  background:linear-gradient(90deg,var(--pink),var(--orange),var(--purple));
-  -webkit-background-clip:text;background-clip:text;color:transparent;margin-bottom:16px;
+  background: black;
+  -webkit-background-clip:text;background-clip:text;margin-bottom:16px;
 }
+.finale-title .letter-pop:hover{color:var(--pink);-webkit-text-fill-color:var(--pink);}
 .replay-row{display:flex;gap:12px;justify-content:center;margin-top:20px;flex-wrap:wrap;}
 
 /* ── RESPONSIVE ── */
@@ -361,7 +401,7 @@ p{margin:0 0 6px;font-weight:400;line-height:1.55;color:#4a3558;}
     <div class="card">
       
       <p class="hero-greeting anim-line" style="font-size: 24px; font-weight: 700;" id="heroGreeting"></p>
-      <h1 class="hero-name">Norin</h1>
+      <h1 class="hero-name" id="heroName">Norin</h1>
       <p class="hero-sub wave-text anim-line" style="font-size: 24px; font-weight: 700;" id="heroSub"></p>
       <div class="next-wrap"><button class="btn teal show" data-next>Lanjut ➜</button></div>
     </div>
@@ -487,11 +527,27 @@ const twConfigs = {
 };
 const twTimers = {};
 
+/* turn the (already revealed) plain text inside an element into
+   per-letter spans that pop in and wiggle on hover/tap */
+function makeLettersInteractive(el){
+  const text = el.textContent;
+  el.innerHTML = '';
+  el.classList.add('letters-wrap');
+  [...text].forEach((ch,i)=>{
+    const s = document.createElement('span');
+    s.className = 'letter-pop';
+    s.style.animationDelay = (i*0.025)+'s';
+    s.textContent = ch===' ' ? '\u00a0' : ch;
+    el.appendChild(s);
+  });
+}
+
 function typewrite(elId, onDone){
   const el = document.getElementById(elId);
   if(!el) return;
   const cfg = twConfigs[elId];
   el.innerHTML = '';
+  el.classList.remove('letters-wrap');
   const span = document.createElement('span');
   const cursor = document.createElement('span');
   cursor.className = 'tw-cursor';
@@ -503,8 +559,11 @@ function typewrite(elId, onDone){
       span.textContent += cfg.text[i++];
     } else {
       clearInterval(twTimers[elId]);
-      // blink cursor for 1.5s then remove
-      setTimeout(()=>{ cursor.remove(); if(onDone) onDone(); }, 1500);
+      // blink cursor for 1.5s then turn finished text into interactive letters
+      setTimeout(()=>{
+  cursor.remove();
+  if(onDone) onDone();
+}, 1500);
     }
   }, cfg.speed);
 }
@@ -529,15 +588,55 @@ function animLines(sceneId){
 }
 
 /* ═══════════════════════════════════════════════
+   CARD TILT (mouse + touch) — makes the card feel alive
+═══════════════════════════════════════════════ */
+function initCardTilt(){
+  document.querySelectorAll('.card').forEach(card=>{
+    function tiltTo(clientX, clientY){
+      const r = card.getBoundingClientRect();
+      const x = clientX - r.left, y = clientY - r.top;
+      const rx = ((y / r.height) - 0.5) * -7;
+      const ry = ((x / r.width) - 0.5) * 7;
+      card.style.transform = `perspective(900px) rotateX(${rx}deg) rotateY(${ry}deg)`;
+    }
+    function resetTilt(){ card.style.transform = ''; }
+    card.addEventListener('mousemove', e=>tiltTo(e.clientX, e.clientY));
+    card.addEventListener('mouseleave', resetTilt);
+    card.addEventListener('touchmove', e=>{
+      if(e.touches && e.touches[0]) tiltTo(e.touches[0].clientX, e.touches[0].clientY);
+    }, {passive:true});
+    card.addEventListener('touchend', resetTilt);
+  });
+}
+
+/* ═══════════════════════════════════════════════
+   GENERIC CLICK RIPPLE for .btn / .arrow-btn
+═══════════════════════════════════════════════ */
+document.addEventListener('click', e=>{
+  const btn = e.target.closest('.btn, .arrow-btn');
+  if(!btn) return;
+  const rect = btn.getBoundingClientRect();
+  const ripple = document.createElement('span');
+  ripple.className = 'click-ripple';
+  const cx = (e.clientX || rect.left + rect.width/2) - rect.left;
+  const cy = (e.clientY || rect.top + rect.height/2) - rect.top;
+  ripple.style.left = cx+'px'; ripple.style.top = cy+'px';
+  btn.appendChild(ripple);
+  setTimeout(()=>ripple.remove(), 650);
+});
+
+/* ═══════════════════════════════════════════════
    NAVIGATION
 ═══════════════════════════════════════════════ */
 const scenes = ['scene0','scene4','scene1','scene2','scene3','scene5','scene6'];
+const sceneLabels = ['Kado','Musik','Halo','Harapan','Kue','Balon','Selesai'];
 let current = 0, unlocked = 0;
 
 const dotnav = document.getElementById('dotnav');
 scenes.forEach((_,i)=>{
   const b = document.createElement('button');
   b.setAttribute('aria-label','Scene '+(i+1));
+  b.title = sceneLabels[i] || ('Scene '+(i+1));
   b.addEventListener('click', ()=>{ if(i<=unlocked) goTo(i); });
   dotnav.appendChild(b);
 });
@@ -547,6 +646,18 @@ function renderDots(){
     b.classList.toggle('on', i===current);
     b.classList.toggle('locked', i>unlocked);
   });
+}
+
+function popCard(sceneId){
+  const card = document.querySelector('#'+sceneId+' .card');
+  if(!card) return;
+  card.classList.remove('card-pop');
+  card.style.transform = '';
+  // restart animation
+  requestAnimationFrame(()=>requestAnimationFrame(()=>{
+    card.classList.add('card-pop');
+  }));
+  setTimeout(()=>card.classList.remove('card-pop'), 700);
 }
 
 function goTo(i){
@@ -565,6 +676,7 @@ function goTo(i){
     toEl.style.visibility = ''; toEl.style.opacity = '';
   }));
   renderDots();
+  popCard(scenes[i]);
   onEnterScene(i);
 }
 
@@ -585,7 +697,9 @@ function onEnterScene(i){
   if(i===1){
     const greet = document.getElementById('heroGreeting');
     const sub   = document.getElementById('heroSub');
+    const name  = document.getElementById('heroName');
     if(greet){ greet.textContent='Hari ini hari yang spesiall soalnyaa..'; greet.classList.remove('visible'); setTimeout(()=>greet.classList.add('visible'),100); }
+    if(name){ makeLettersInteractive(name); }
     if(sub){ makeWaveText(sub,'ulang tahuunn'); sub.classList.remove('visible'); setTimeout(()=>sub.classList.add('visible'),400); }
   }
   if(i===2){ typewrite('tw2'); initWishes(); }
@@ -617,6 +731,8 @@ document.getElementById('replayBtn').addEventListener('click', ()=>{
 // boot
 document.getElementById(scenes[0]).classList.add('active');
 renderDots();
+initCardTilt();
+popCard(scenes[0]);
 onEnterScene(0);
 
 /* ═══════════════════════════════════════════════
@@ -702,11 +818,19 @@ function openGift(){
 giftWrap.addEventListener('click', openGift);
 giftWrap.addEventListener('keydown', e=>{ if(e.key==='Enter'||e.key===' ') openGift(); });
 
+/* hero balloons pop a little confetti burst on click, just for fun */
+document.querySelectorAll('.hero-balloon').forEach(b=>{
+  b.addEventListener('click', ()=>{
+    const r=b.getBoundingClientRect();
+    burstConfetti(r.left+r.width/2, r.top+r.height/2, 28);
+  });
+});
+
 /* ═══════════════════════════════════════════════
    SCENE 2 — WISHES
 ═══════════════════════════════════════════════ */
 const wishes=[
-  "Semoga tahun tahun kedepan dipenuhi tawa, kejutan manis, dan mimpi-mimpi yang terwujud.",
+  "Semoga tahun ini dan seterusnya bahagia teruus dan mimpi-mimpi bisa terwujud.",
   "Terima kasih sudah jadi alasan banyak orang tersenyum, termasuk aku. ",
   "Semakin hari kita pasti akan berubah dan tumbuh, tapi semoga kamu tetap selalu di jalan Tuhan yaa.",
   "Selamat menambah satu tahun cerita baru. Selamat ulang tahunn"
@@ -902,6 +1026,7 @@ function stopPlay(){
   clearTimeout(melodyTimer); if(customAudio) customAudio.pause();
 }
 playBtn.addEventListener('click', ()=>isPlaying?stopPlay():startPlay());
+vinylEl.addEventListener('click', ()=>isPlaying?stopPlay():startPlay());
 
 document.getElementById('mute-btn').addEventListener('click', e=>{
   muted=!muted; e.target.textContent=muted?'🔇':'🔊';
