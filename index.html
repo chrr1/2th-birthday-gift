@@ -387,8 +387,7 @@ p{margin:0 0 6px;font-weight:400;line-height:1.55;color:#4a3558;}
     <div class="card">
      
       <h2 class="typewriter" id="tw3"></h2>
-      <p class="anim-line" id="cakeSubtitle">Tahan tombol 💨 untuk meniup, atau ketuk langsung lilinnya.</p>
-      <div class="cake-zone" id="cakeZone">
+         <div class="cake-zone" id="cakeZone">
         <div class="cake-tier tier3">
           <div class="drip" style="left:16px;"></div>
           <div class="drip" style="left:86px;"></div>
@@ -403,10 +402,10 @@ p{margin:0 0 6px;font-weight:400;line-height:1.55;color:#4a3558;}
       </div>
       <div class="blow-zone">
         <div class="mic-bar-wrap"><div class="mic-bar" id="micBar"></div></div>
-        <button class="blow-btn" id="blowBtn">💨 Tahan untuk Meniup</button>
-        <div class="blow-hint" id="blowHint">Tahan tombol → lilin akan padam satu per satu</div>
+        <button class="blow-btn" id="blowBtn">Tahan buat tiup lilin</button>
+        <div class="blow-hint" id="blowHint"></div>
       </div>
-      <div class="next-wrap"><button class="btn teal" data-next>Setel Musik ➜</button></div>
+      <div class="next-wrap"><button class="btn teal" data-next>Lanjut ➜</button></div>
     </div>
   </section>
 
@@ -450,9 +449,9 @@ p{margin:0 0 6px;font-weight:400;line-height:1.55;color:#4a3558;}
     <div class="card">
      
       <h2 class="typewriter" id="tw5"></h2>
-      <p class="anim-line">Tulis satu harapan untuk Norin, lalu lepaskan jadi balon!</p>
+      <p class="anim-line">Tulis harapan lalu lepaskan jadi balon</p>
       <div class="wishinput-row">
-        <input type="text" id="wishText" maxlength="80" placeholder="Semoga kamu…">
+        <input type="text" id="wishText" maxlength="80" placeholder="Semoga…">
         <button class="btn pink" id="releaseBtn">Lepas 🎈</button>
       </div>
       <div class="next-wrap"><button class="btn teal show" data-next>Lanjut ➜</button></div>
@@ -482,9 +481,9 @@ const twConfigs = {
   tw0:{ text:'Untukmu, hari ini.', speed:55 },
   tw2:{ text:'Sepatah dua patah kata', speed:50 },
   tw3:{ text:'Buat satu permintaan…', speed:50 },
-  tw4:{ text:'Putar musiknya 🎶', speed:55 },
+  tw4:{ text:'Putar musiknya ', speed:55 },
   tw5:{ text:'Lepas harapanmu ke langit', speed:48 },
-  tw6:{ text:'Selamat Ulang Tahun, Norin!', speed:60 },
+  tw6:{ text:'Selamat Ulang Tahun Sayaang!', speed:60 },
 };
 const twTimers = {};
 
@@ -707,10 +706,10 @@ giftWrap.addEventListener('keydown', e=>{ if(e.key==='Enter'||e.key===' ') openG
    SCENE 2 — WISHES
 ═══════════════════════════════════════════════ */
 const wishes=[
-  "Semoga setahun ke depan dipenuhi tawa, kejutan manis, dan mimpi-mimpi yang berani diwujudkan. ✨",
-  "Terima kasih sudah jadi alasan banyak orang tersenyum, termasuk aku. 💛",
-  "Tumbuh itu pasti, tapi semoga kamu selalu ingat untuk tetap jadi diri sendiri yang seru ini. 🌟",
-  "Selamat menambah satu tahun cerita baru. Selamat ulang tahun, Norin! 🎂"
+  "Semoga tahun tahun kedepan dipenuhi tawa, kejutan manis, dan mimpi-mimpi yang terwujud.",
+  "Terima kasih sudah jadi alasan banyak orang tersenyum, termasuk aku. ",
+  "Semakin hari kita pasti akan berubah dan tumbuh, tapi semoga kamu tetap selalu di jalan Tuhan yaa.",
+  "Selamat menambah satu tahun cerita baru. Selamat ulang tahunn"
 ];
 let wishIndex=0, wishesInited=false;
 function initWishes(){
@@ -811,7 +810,7 @@ function initBlow(){
       if(!blowHolding){ clearInterval(blowInterval); return; }
       blowPower=Math.min(100, blowPower+8);
       bar.style.width=blowPower+'%';
-      hint.textContent='💨 '.repeat(Math.ceil(blowPower/34))+'sedang meniup…';
+      hint.textContent=' '.repeat(Math.ceil(blowPower/34))+'sedang meniup…';
       if(blowPower>=100){
         blowPower=0; bar.style.width='0%';
         const lit=[...candleEls].find(c=>!c.classList.contains('out'));
@@ -831,7 +830,7 @@ function initBlow(){
       if(blowPower<=0) clearInterval(drain);
     },40);
     if(candlesOutCount<candleEls.length)
-      document.getElementById('blowHint').textContent='Tahan tombol → lilin akan padam satu per satu';
+      document.getElementById('blowHint').textContent='';
   }
 
   btn.addEventListener('mousedown', startBlow);
@@ -903,13 +902,7 @@ function stopPlay(){
   clearTimeout(melodyTimer); if(customAudio) customAudio.pause();
 }
 playBtn.addEventListener('click', ()=>isPlaying?stopPlay():startPlay());
-document.getElementById('songFile').addEventListener('change', e=>{
-  const f=e.target.files[0]; if(!f) return;
-  stopPlay(); if(customAudio){customAudio.src='';customAudio=null;}
-  customAudio=new Audio(URL.createObjectURL(f)); customAudio.loop=true; customAudio.muted=muted;
-  document.querySelector('.vinyl-label').textContent=f.name.replace(/\.[^/.]+$/,'').slice(0,14).toUpperCase();
-  startPlay();
-});
+
 document.getElementById('mute-btn').addEventListener('click', e=>{
   muted=!muted; e.target.textContent=muted?'🔇':'🔊';
   if(customAudio) customAudio.muted=muted;
